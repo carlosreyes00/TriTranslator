@@ -10,9 +10,12 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
     
-    @State var email: String = ""
-    @State var password: String = ""
-
+    @State private var showLoginPage: Bool = false
+    
+    @State private var firestoreManager: FirestoreManager = .init()
+    
+    @State private var sourceText: String = ""
+    
     var body: some View {
         VStack {
             Text("Signed In: \(authViewModel.isSignedIn ? "🟢" : "🔴")")
@@ -20,36 +23,31 @@ struct ContentView: View {
             if authViewModel.isSignedIn {
                 Text("Hello, welcome")
                 Text("Now you can see my secrets!")
-            } else {
                 
-                TextField("Email", text: $email)
-                    .textContentType(.emailAddress)
-                TextField("Password", text: $password)
-                    .textContentType(.password)
-                
-                Button("Sign In") {
-                    Task {
-                        do {
-                            print("signing in")
-                            try await authViewModel.signIn(email: email, password: password)
-                            print("signed in")
-                        } catch {
-                            print(error.localizedDescription)
-                        }
+                HStack {
+                    Button("Add Translation") {
+                        firestoreManager
+                            .addTranslation(
+                                sourceText: sourceText,
+                                translatedText: "this is the text translated \(Int.random(in: 1...100))",
+                                sourceLang: "EN",
+                                targetLang: "ES",
+                                createdAt: Date.now
+                            )
                     }
                 }
                 
-                Button("Sign Up") {
-                    Task {
-                        do {
-                            print("signing up")
-                            try await authViewModel.signUp(email: email, password: password)
-                            print("signed up")
-                        } catch {
-                            print(error.localizedDescription)
-                        }
-                    }
-                }
+                TextField("Text to translate", text: $sourceText)
+                
+//                List(firestoreManager.translations) { translation in
+//                    VStack {
+//                        Text("\(translation.createdAt)")
+//                            .bold()
+//                        Text("from: \(translation.sourceText)")
+//                        Text("to: \(translation.translatedText)")
+//                            .font(.footnote)
+//                    }
+//                }
             }
             
             Button("Sign out") {
@@ -66,10 +64,26 @@ struct ContentView: View {
             .disabled(!authViewModel.isSignedIn)
         }
         .padding()
-        
+        .task {
+            do {
+                try await firestoreManager.getTranslations()
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        .onAppear {
+            showLoginPage = !authViewModel.isSignedIn
+        }
+        .onChange(of: authViewModel.isSignedIn) { _ , newValue in
+            showLoginPage = !newValue
+        }
+        .sheet(isPresented: $showLoginPage) {
+            LoginPage()
+        }
     }
 }
 
-//#Preview {
-//    ContentView()
-//}
+#Preview {
+    ContentView()
+        .environmentObject(AuthViewModel())
+}
