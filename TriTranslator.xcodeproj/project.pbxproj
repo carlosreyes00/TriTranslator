@@ -8,8 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		126FDE082E2D4B0D0047766C /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 126FDE072E2D4B0D0047766C /* FirebaseFirestore */; };
-		126FDE0A2E2D4CEB0047766C /* Translation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126FDE092E2D4CEB0047766C /* Translation.swift */; };
-		126FDE0C2E2D5A1C0047766C /* LoginPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126FDE0B2E2D5A1C0047766C /* LoginPage.swift */; };
+		126FDE142E2D919A0047766C /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 126FDE132E2D919A0047766C /* Secrets.xcconfig */; };
 		127AC7102E2C508B00B28F31 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 127AC70F2E2C508B00B28F31 /* FirebaseAnalytics */; };
 		127AC7122E2C508B00B28F31 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 127AC7112E2C508B00B28F31 /* FirebaseAuth */; };
 		127AC71A2E2C50AC00B28F31 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127AC7162E2C50AC00B28F31 /* ContentView.swift */; };
@@ -17,20 +16,36 @@
 		127AC71C2E2C50AC00B28F31 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 127AC7152E2C50AC00B28F31 /* Assets.xcassets */; };
 		127AC71D2E2C50AC00B28F31 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 127AC7172E2C50AC00B28F31 /* GoogleService-Info.plist */; };
 		127AC71F2E2C577800B28F31 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127AC71E2E2C577800B28F31 /* AuthViewModel.swift */; };
-		127AC7212E2C780E00B28F31 /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127AC7202E2C780E00B28F31 /* FirestoreManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		126FDE092E2D4CEB0047766C /* Translation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Translation.swift; sourceTree = "<group>"; };
-		126FDE0B2E2D5A1C0047766C /* LoginPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPage.swift; sourceTree = "<group>"; };
+		126FDE132E2D919A0047766C /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		127AC6FE2E2C4E3500B28F31 /* TriTranslator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TriTranslator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		127AC7152E2C50AC00B28F31 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		127AC7162E2C50AC00B28F31 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		127AC7172E2C50AC00B28F31 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		127AC7182E2C50AC00B28F31 /* TriTranslatorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriTranslatorApp.swift; sourceTree = "<group>"; };
 		127AC71E2E2C577800B28F31 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
-		127AC7202E2C780E00B28F31 /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
+		129CFDA42E2DA15400B52781 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		126FDE0E2E2D8C2F0047766C /* Model */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Model;
+			sourceTree = "<group>";
+		};
+		126FDE0F2E2D8C4D0047766C /* Pages */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Pages;
+			sourceTree = "<group>";
+		};
+		126FDE102E2D8C710047766C /* Manager */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Manager;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		127AC6FB2E2C4E3500B28F31 /* Frameworks */ = {
@@ -73,14 +88,16 @@
 		127AC7192E2C50AC00B28F31 /* TriTranslator */ = {
 			isa = PBXGroup;
 			children = (
+				129CFDA42E2DA15400B52781 /* Info.plist */,
+				126FDE102E2D8C710047766C /* Manager */,
+				126FDE0F2E2D8C4D0047766C /* Pages */,
+				126FDE0E2E2D8C2F0047766C /* Model */,
 				127AC7152E2C50AC00B28F31 /* Assets.xcassets */,
 				127AC7162E2C50AC00B28F31 /* ContentView.swift */,
 				127AC7182E2C50AC00B28F31 /* TriTranslatorApp.swift */,
-				127AC7172E2C50AC00B28F31 /* GoogleService-Info.plist */,
 				127AC71E2E2C577800B28F31 /* AuthViewModel.swift */,
-				127AC7202E2C780E00B28F31 /* FirestoreManager.swift */,
-				126FDE092E2D4CEB0047766C /* Translation.swift */,
-				126FDE0B2E2D5A1C0047766C /* LoginPage.swift */,
+				127AC7172E2C50AC00B28F31 /* GoogleService-Info.plist */,
+				126FDE132E2D919A0047766C /* Secrets.xcconfig */,
 			);
 			path = TriTranslator;
 			sourceTree = "<group>";
@@ -99,6 +116,11 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				126FDE0E2E2D8C2F0047766C /* Model */,
+				126FDE0F2E2D8C4D0047766C /* Pages */,
+				126FDE102E2D8C710047766C /* Manager */,
 			);
 			name = TriTranslator;
 			packageProductDependencies = (
@@ -154,6 +176,7 @@
 			files = (
 				127AC71C2E2C50AC00B28F31 /* Assets.xcassets in Resources */,
 				127AC71D2E2C50AC00B28F31 /* GoogleService-Info.plist in Resources */,
+				126FDE142E2D919A0047766C /* Secrets.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,9 +190,6 @@
 				127AC71A2E2C50AC00B28F31 /* ContentView.swift in Sources */,
 				127AC71B2E2C50AC00B28F31 /* TriTranslatorApp.swift in Sources */,
 				127AC71F2E2C577800B28F31 /* AuthViewModel.swift in Sources */,
-				127AC7212E2C780E00B28F31 /* FirestoreManager.swift in Sources */,
-				126FDE0C2E2D5A1C0047766C /* LoginPage.swift in Sources */,
-				126FDE0A2E2D4CEB0047766C /* Translation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,6 +198,7 @@
 /* Begin XCBuildConfiguration section */
 		127AC7072E2C4E3600B28F31 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 126FDE132E2D919A0047766C /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -242,6 +263,7 @@
 		};
 		127AC7082E2C4E3600B28F31 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 126FDE132E2D919A0047766C /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -299,6 +321,7 @@
 		};
 		127AC70A2E2C4E3600B28F31 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 126FDE132E2D919A0047766C /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -307,6 +330,7 @@
 				DEVELOPMENT_TEAM = P52S2D2953;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TriTranslator/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -327,6 +351,7 @@
 		};
 		127AC70B2E2C4E3600B28F31 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 126FDE132E2D919A0047766C /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -335,6 +360,7 @@
 				DEVELOPMENT_TEAM = P52S2D2953;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TriTranslator/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

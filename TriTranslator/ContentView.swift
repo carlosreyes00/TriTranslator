@@ -15,29 +15,34 @@ struct ContentView: View {
     @State private var firestoreManager: FirestoreManager = .init()
     
     @State private var sourceText: String = ""
+    @State private var translatedText: String = ""
+    
+    private var dLManager: DeepLManager = .init()
     
     var body: some View {
         VStack {
             Text("Signed In: \(authViewModel.isSignedIn ? "🟢" : "🔴")")
             
             if authViewModel.isSignedIn {
-                Text("Hello, welcome")
-                Text("Now you can see my secrets!")
-                
                 HStack {
-                    Button("Add Translation") {
-                        firestoreManager
-                            .addTranslation(
-                                sourceText: sourceText,
-                                translatedText: "this is the text translated \(Int.random(in: 1...100))",
-                                sourceLang: "EN",
-                                targetLang: "ES",
-                                createdAt: Date.now
-                            )
+                    Button("Translate") {
+                        Task {
+                            do {
+                                // create the Translation object (perform the actual translation)
+                                let translation = try await dLManager.translate(sourceText: sourceText, targetLang: "EN")!
+                                // get the translation response and update the @State value (UI)
+                                translatedText = translation.responseTranslation!.translations[0].text
+                                // upload the Translation to Firestore
+                                firestoreManager.addTranslation(translation)
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                        }
                     }
                 }
                 
-                TextField("Text to translate", text: $sourceText)
+                TextField("Texto para traducir", text: $sourceText)
+                TextField("Translated text", text: $translatedText)
                 
 //                List(firestoreManager.translations) { translation in
 //                    VStack {

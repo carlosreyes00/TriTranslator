@@ -19,11 +19,9 @@ import FirebaseFirestore
         startListening()
     }
     
-    func addTranslation(sourceText: String, translatedText: String, sourceLang: String, targetLang: String, createdAt: Date) {
-        let newTranslation = Translation(sourceText: sourceText, translatedText: translatedText, sourceLang: sourceLang, targetLang: targetLang, createdAt: createdAt)
-        
+    func addTranslation(_ translation: Translation) {
         do {
-            try db.collection("translations").addDocument(from: newTranslation)
+            try db.collection("translations").addDocument(from: translation)
         } catch {
             print(error.localizedDescription)
         }
@@ -38,8 +36,6 @@ import FirebaseFirestore
         
         DispatchQueue.main.async { [self] in
             self.translations = translations
-            print("total translations in db: \(self.translations.count)")
-            print(self.translations)
         }
     }
     
@@ -60,8 +56,6 @@ import FirebaseFirestore
                 
                 DispatchQueue.main.async { [self] in
                     self.translations = translations
-                    print("total translations in db: \(self.translations.count)")
-                    print(self.translations)
                 }
             }
     }

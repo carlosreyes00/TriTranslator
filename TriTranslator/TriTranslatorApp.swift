@@ -11,11 +11,8 @@ import FirebaseCore
 @main
 struct TriTranslatorApp: App {
     
-//    @State private var authViewModel: AuthViewModel?
-    
     init() {
         FirebaseApp.configure()
-//        authViewModel = AuthViewModel()
     }
     
     var body: some Scene {
