@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DeepLLanguage: Codable, Identifiable, Equatable {
+struct DeepLLanguage: Codable, Identifiable, Equatable, Hashable {
     let id = UUID()
     
     let language: String

@@ -29,7 +29,8 @@ class DeepLManager: ObservableObject {
         request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.allHTTPHeaderFields = [
-            "Authorization" : "DeepL-Auth-Key \(Secrets.deeplAPIKey)"
+            "Authorization" : "DeepL-Auth-Key \(Secrets.deeplAPIKey)",
+            "Content-Type" : "application/json"
         ]
         
         languages = []
@@ -38,6 +39,7 @@ class DeepLManager: ObservableObject {
     func translate(sourceText: String, sourceLang: String? = nil, targetLang: String) async throws -> Translation? {
         print("starting translation")
         
+        print("text: \(sourceText), targetLang: \(targetLang)")
         let deepLRequestObject = DeepLRequestTranslation(text: [sourceText], source_lang: sourceLang, target_lang: targetLang)
         request.httpBody = try JSONEncoder().encode(deepLRequestObject)
         

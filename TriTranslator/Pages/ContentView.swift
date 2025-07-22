@@ -21,7 +21,7 @@ struct ContentView: View {
     
     @State private var languages: [DeepLLanguage] = []
     
-    @State private var selectedLanguage: DeepLLanguage? = nil
+    @State private var selectedLanguage: DeepLLanguage = DeepLLanguage(language: "", name: "")
     
     var body: some View {
         VStack {
@@ -33,7 +33,7 @@ struct ContentView: View {
                         Task {
                             do {
                                 // create the Translation object (perform the actual translation)
-                                let translation = try await dLManager.translate(sourceText: sourceText, targetLang: "EN")!
+                                let translation = try await dLManager.translate(sourceText: sourceText, targetLang: selectedLanguage.language)!
                                 // get the translation response and update the @State value (UI)
                                 translatedText = translation.responseTranslation!.translations[0].text
                                 // upload the Translation to Firestore
@@ -49,19 +49,7 @@ struct ContentView: View {
                 TextField("Texto para traducir", text: $sourceText)
                 TextField("Translated text", text: $translatedText)
                 
-                VStack {
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))]) {
-                        ForEach(languages) { lang in
-                            Text(lang.name)
-                                .foregroundStyle(lang == selectedLanguage
-                                                 ? Color.blue
-                                                 : Color.black)
-                                .onTapGesture {
-                                    selectedLanguage = lang
-                                }
-                        }
-                    }
-                }
+                LanguagesView(languages: $languages, selectedLang: $selectedLanguage)
                 
 //                ScrollView {
 //                    VStack {

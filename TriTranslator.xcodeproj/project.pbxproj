@@ -14,6 +14,9 @@
 		127AC71B2E2C50AC00B28F31 /* TriTranslatorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127AC7182E2C50AC00B28F31 /* TriTranslatorApp.swift */; };
 		127AC71C2E2C50AC00B28F31 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 127AC7152E2C50AC00B28F31 /* Assets.xcassets */; };
 		127AC71D2E2C50AC00B28F31 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 127AC7172E2C50AC00B28F31 /* GoogleService-Info.plist */; };
+		1288B9AC2E30262500B7133B /* LanguageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1288B9A72E30262500B7133B /* LanguageCell.swift */; };
+		1288B9AD2E30262500B7133B /* TranslationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1288B9A82E30262500B7133B /* TranslationCell.swift */; };
+		1288B9AE2E30262500B7133B /* LanguagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1288B9AA2E30262500B7133B /* LanguagesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,29 +25,13 @@
 		127AC7152E2C50AC00B28F31 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		127AC7172E2C50AC00B28F31 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		127AC7182E2C50AC00B28F31 /* TriTranslatorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriTranslatorApp.swift; sourceTree = "<group>"; };
+		1288B9A72E30262500B7133B /* LanguageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageCell.swift; sourceTree = "<group>"; };
+		1288B9A82E30262500B7133B /* TranslationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationCell.swift; sourceTree = "<group>"; };
+		1288B9AA2E30262500B7133B /* LanguagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguagesView.swift; sourceTree = "<group>"; };
 		129CFDA42E2DA15400B52781 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		1242F0302E2F0BBA006E3D70 /* Exceptions for "Views" folder in "TriTranslator" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Cells/LanguageCell.swift,
-				Cells/TranslationCell.swift,
-			);
-			target = 127AC6FD2E2C4E3500B28F31 /* TriTranslator */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		1242F02C2E2F0B8C006E3D70 /* Views */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				1242F0302E2F0BBA006E3D70 /* Exceptions for "Views" folder in "TriTranslator" target */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
 		126FDE0E2E2D8C2F0047766C /* Model */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Model;
@@ -107,13 +94,31 @@
 				126FDE102E2D8C710047766C /* Manager */,
 				126FDE0F2E2D8C4D0047766C /* Pages */,
 				126FDE0E2E2D8C2F0047766C /* Model */,
-				1242F02C2E2F0B8C006E3D70 /* Views */,
+				1288B9AB2E30262500B7133B /* Views */,
 				127AC7152E2C50AC00B28F31 /* Assets.xcassets */,
 				127AC7182E2C50AC00B28F31 /* TriTranslatorApp.swift */,
 				127AC7172E2C50AC00B28F31 /* GoogleService-Info.plist */,
 				126FDE132E2D919A0047766C /* Secrets.xcconfig */,
 			);
 			path = TriTranslator;
+			sourceTree = "<group>";
+		};
+		1288B9A92E30262500B7133B /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				1288B9A72E30262500B7133B /* LanguageCell.swift */,
+				1288B9A82E30262500B7133B /* TranslationCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		1288B9AB2E30262500B7133B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1288B9AA2E30262500B7133B /* LanguagesView.swift */,
+				1288B9A92E30262500B7133B /* Cells */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -202,6 +207,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				127AC71B2E2C50AC00B28F31 /* TriTranslatorApp.swift in Sources */,
+				1288B9AC2E30262500B7133B /* LanguageCell.swift in Sources */,
+				1288B9AD2E30262500B7133B /* TranslationCell.swift in Sources */,
+				1288B9AE2E30262500B7133B /* LanguagesView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
