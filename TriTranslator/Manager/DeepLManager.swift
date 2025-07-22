@@ -30,10 +30,10 @@ class DeepLManager {
         ]
     }
     
-    func translate(sourceText: String, targetLang: String) async throws -> Translation? {
+    func translate(sourceText: String, sourceLang: String? = nil, targetLang: String) async throws -> Translation? {
         print("starting translation")
         
-        let deepLRequestObject = DeepLRequestTranslation(text: [sourceText], target_lang: targetLang)
+        let deepLRequestObject = DeepLRequestTranslation(text: [sourceText], source_lang: sourceLang, target_lang: targetLang)
         request.httpBody = try JSONEncoder().encode(deepLRequestObject)
         
         let (data, response) = try await URLSession.shared.data(for: request)
@@ -47,6 +47,7 @@ class DeepLManager {
         
         print("finishing translation")
         print("\(deeplResponseObject)")
+        
         return Translation(requestTranslation: deepLRequestObject, responseTranslation: deeplResponseObject, createdAt: Date.now)
     }
     

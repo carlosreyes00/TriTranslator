@@ -44,15 +44,13 @@ struct ContentView: View {
                 TextField("Texto para traducir", text: $sourceText)
                 TextField("Translated text", text: $translatedText)
                 
-//                List(firestoreManager.translations) { translation in
-//                    VStack {
-//                        Text("\(translation.createdAt)")
-//                            .bold()
-//                        Text("from: \(translation.sourceText)")
-//                        Text("to: \(translation.translatedText)")
-//                            .font(.footnote)
-//                    }
-//                }
+                ScrollView {
+                    VStack {
+                        ForEach(firestoreManager.translations) { translation in
+                            TranslationCell(translation: translation)
+                        }
+                    }
+                }
             }
             
             Button("Sign out") {

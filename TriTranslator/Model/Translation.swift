@@ -16,6 +16,7 @@ struct Translation: Identifiable, Codable {
 
 struct DeepLRequestTranslation: Codable {
     let text: [String]
+    let source_lang: String?
     let target_lang: String
 }
 

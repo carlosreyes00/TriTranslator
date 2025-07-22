@@ -11,25 +11,39 @@
 		126FDE142E2D919A0047766C /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 126FDE132E2D919A0047766C /* Secrets.xcconfig */; };
 		127AC7102E2C508B00B28F31 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 127AC70F2E2C508B00B28F31 /* FirebaseAnalytics */; };
 		127AC7122E2C508B00B28F31 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 127AC7112E2C508B00B28F31 /* FirebaseAuth */; };
-		127AC71A2E2C50AC00B28F31 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127AC7162E2C50AC00B28F31 /* ContentView.swift */; };
 		127AC71B2E2C50AC00B28F31 /* TriTranslatorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127AC7182E2C50AC00B28F31 /* TriTranslatorApp.swift */; };
 		127AC71C2E2C50AC00B28F31 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 127AC7152E2C50AC00B28F31 /* Assets.xcassets */; };
 		127AC71D2E2C50AC00B28F31 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 127AC7172E2C50AC00B28F31 /* GoogleService-Info.plist */; };
-		127AC71F2E2C577800B28F31 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127AC71E2E2C577800B28F31 /* AuthViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		126FDE132E2D919A0047766C /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		127AC6FE2E2C4E3500B28F31 /* TriTranslator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TriTranslator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		127AC7152E2C50AC00B28F31 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		127AC7162E2C50AC00B28F31 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		127AC7172E2C50AC00B28F31 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		127AC7182E2C50AC00B28F31 /* TriTranslatorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriTranslatorApp.swift; sourceTree = "<group>"; };
-		127AC71E2E2C577800B28F31 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		129CFDA42E2DA15400B52781 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1242F0302E2F0BBA006E3D70 /* Exceptions for "Views" folder in "TriTranslator" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Cells/TranslationCell.swift,
+			);
+			target = 127AC6FD2E2C4E3500B28F31 /* TriTranslator */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		1242F02C2E2F0B8C006E3D70 /* Views */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1242F0302E2F0BBA006E3D70 /* Exceptions for "Views" folder in "TriTranslator" target */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		126FDE0E2E2D8C2F0047766C /* Model */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Model;
@@ -92,10 +106,9 @@
 				126FDE102E2D8C710047766C /* Manager */,
 				126FDE0F2E2D8C4D0047766C /* Pages */,
 				126FDE0E2E2D8C2F0047766C /* Model */,
+				1242F02C2E2F0B8C006E3D70 /* Views */,
 				127AC7152E2C50AC00B28F31 /* Assets.xcassets */,
-				127AC7162E2C50AC00B28F31 /* ContentView.swift */,
 				127AC7182E2C50AC00B28F31 /* TriTranslatorApp.swift */,
-				127AC71E2E2C577800B28F31 /* AuthViewModel.swift */,
 				127AC7172E2C50AC00B28F31 /* GoogleService-Info.plist */,
 				126FDE132E2D919A0047766C /* Secrets.xcconfig */,
 			);
@@ -187,9 +200,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				127AC71A2E2C50AC00B28F31 /* ContentView.swift in Sources */,
 				127AC71B2E2C50AC00B28F31 /* TriTranslatorApp.swift in Sources */,
-				127AC71F2E2C577800B28F31 /* AuthViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
