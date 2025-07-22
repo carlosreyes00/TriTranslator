@@ -17,7 +17,11 @@ struct ContentView: View {
     @State private var sourceText: String = ""
     @State private var translatedText: String = ""
     
-    private var dLManager: DeepLManager = .init()
+    @StateObject private var dLManager: DeepLManager = .init()
+    
+    @State private var languages: [DeepLLanguage] = []
+    
+    @State private var selectedLanguage: DeepLLanguage? = nil
     
     var body: some View {
         VStack {
@@ -40,17 +44,32 @@ struct ContentView: View {
                         }
                     }
                 }
+                .padding()
                 
                 TextField("Texto para traducir", text: $sourceText)
                 TextField("Translated text", text: $translatedText)
                 
-                ScrollView {
-                    VStack {
-                        ForEach(firestoreManager.translations) { translation in
-                            TranslationCell(translation: translation)
+                VStack {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 50))]) {
+                        ForEach(languages) { lang in
+                            Text(lang.name)
+                                .foregroundStyle(lang == selectedLanguage
+                                                 ? Color.blue
+                                                 : Color.black)
+                                .onTapGesture {
+                                    selectedLanguage = lang
+                                }
                         }
                     }
                 }
+                
+//                ScrollView {
+//                    VStack {
+//                        ForEach(firestoreManager.translations) { translation in
+//                            TranslationCell(translation: translation)
+//                        }
+//                    }
+//                }
             }
             
             Button("Sign out") {
@@ -70,12 +89,17 @@ struct ContentView: View {
         .task {
             do {
                 try await firestoreManager.getTranslations()
+//                try await dLManager.getLanguages()
             } catch {
                 print(error.localizedDescription)
             }
         }
         .onAppear {
             showLoginPage = !authViewModel.isSignedIn
+            if languages.count == 0 {
+//                languages = dLManager.languages
+                languages = DeepLLanguage.loadLanguages()
+            }
         }
         .onChange(of: authViewModel.isSignedIn) { _ , newValue in
             showLoginPage = !newValue
@@ -86,7 +110,3 @@ struct ContentView: View {
     }
 }
 
-#Preview {
-    ContentView()
-        .environmentObject(AuthViewModel())
-}

@@ -8,11 +8,35 @@
 import SwiftUI
 
 struct LanguageCell: View {
+    var language: DeepLLanguage
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("\(language.name)")
+            .background {
+                Color.green.opacity(0.2)
+            }
     }
 }
 
 #Preview {
-    LanguageCell()
+    var languages: [DeepLLanguage] = [
+        .init(language: "EN", name: "English"),
+        .init(language: "ES", name: "Español"),
+        .init(language: "IT", name: "Italian"),
+        .init(language: "FR", name: "French"),
+        .init(language: "CH", name: "Chinesse"),
+        .init(language: "EN", name: "English"),
+        .init(language: "ES", name: "Español"),
+        .init(language: "IT", name: "Italian"),
+        .init(language: "FR", name: "French"),
+        .init(language: "CH", name: "Chinesse")
+    ].shuffled()
+    
+    VStack {
+        LazyVGrid(columns: [GridItem(.flexible(minimum: 0, maximum: 20))]) {
+            ForEach(languages) { language in
+                LanguageCell(language: language)
+            }
+        }
+    }
 }

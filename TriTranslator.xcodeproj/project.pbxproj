@@ -29,6 +29,7 @@
 		1242F0302E2F0BBA006E3D70 /* Exceptions for "Views" folder in "TriTranslator" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Cells/LanguageCell.swift,
 				Cells/TranslationCell.swift,
 			);
 			target = 127AC6FD2E2C4E3500B28F31 /* TriTranslator */;
