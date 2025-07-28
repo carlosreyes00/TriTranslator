@@ -19,7 +19,7 @@ struct ContentView: View {
     
     @StateObject private var dLManager: DeepLManager = .init()
     
-    @State private var languages: [DeepLLanguage] = []
+//    @State private var languages: [DeepLLanguage] = []
     
     @State private var selectedLanguage: DeepLLanguage = DeepLLanguage(language: "", name: "")
     
@@ -49,7 +49,7 @@ struct ContentView: View {
                 TextField("Texto para traducir", text: $sourceText)
                 TextField("Translated text", text: $translatedText)
                 
-                LanguagesView(languages: $languages, selectedLang: $selectedLanguage)
+                LanguagesView(selectedLang: $selectedLanguage)
                 
 //                ScrollView {
 //                    VStack {
@@ -77,17 +77,12 @@ struct ContentView: View {
         .task {
             do {
                 try await firestoreManager.getTranslations()
-//                try await dLManager.getLanguages()
             } catch {
                 print(error.localizedDescription)
             }
         }
         .onAppear {
             showLoginPage = !authViewModel.isSignedIn
-            if languages.count == 0 {
-//                languages = dLManager.languages
-                languages = DeepLLanguage.loadLanguages()
-            }
         }
         .onChange(of: authViewModel.isSignedIn) { _ , newValue in
             showLoginPage = !newValue

@@ -8,14 +8,18 @@
 import SwiftUI
 
 struct LanguagesView: View {
-    @Binding var languages: [DeepLLanguage]
     @Binding var selectedLang: DeepLLanguage
     
+    @State private var languages: [DeepLLanguage] = []
+    
     @State private var languageRows: [[DeepLLanguage]] = []
+    
+    @State private var text: Int = 0
     
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
+                Text("\(text)")
                 VStack(alignment: .leading, spacing: 10) {
                     ForEach(languageRows, id: \.self) { row in
                         HStack(spacing: 8) {
@@ -30,6 +34,17 @@ struct LanguagesView: View {
                 }
                 .onAppear {
                     calculateRows(for: geometry.size.width)
+                }
+                .task {
+                    do {
+                        let languagesArray = try await DeepLManager().getLanguages()
+                        
+                        languagesArray.forEach { lang in
+                            languages.append(lang)
+                        }
+                    } catch {
+                        print(error.localizedDescription)
+                    }
                 }
             }
         }

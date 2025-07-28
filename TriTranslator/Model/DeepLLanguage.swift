@@ -18,27 +18,32 @@ struct DeepLLanguage: Codable, Identifiable, Equatable, Hashable {
         case name = "name"
     }
 
-    static func saveLanguages(languages: [DeepLLanguage]) {
-        print("saving languages")
+    static func saveLanguagesToDisk(languages: [DeepLLanguage]) {
+        print("Saving languages")
         
         let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("languages.json")
-        let data = try! JSONEncoder().encode(languages)
-        try! data.write(to: url, options: .atomic)
-        print("languages were saved succesfully")
-        print(data)
+        
+        do {
+            let data = try JSONEncoder().encode(languages)
+            try data.write(to: url, options: .atomic)
+            print("Languages were saved succesfully")
+        } catch {
+            print("Error saving local languages: \(error.localizedDescription)")
+        }
     }
     
-    static func loadLanguages() -> [DeepLLanguage] {
-        print("loading languages")
+    static func loadLanguagesFromDisk() -> [DeepLLanguage] {
+        print("Loading local languages")
         
         let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("languages.json")
-        let data = try! Data(contentsOf: url)
+        
         do {
+            let data = try Data(contentsOf: url)
             return try JSONDecoder().decode([DeepLLanguage].self, from: data)
         } catch {
-            print("error returning the array")
+            print("Error loading local languages: \(error.localizedDescription)")
             return []
         }
     }
