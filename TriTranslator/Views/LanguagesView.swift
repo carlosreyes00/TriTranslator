@@ -14,12 +14,11 @@ struct LanguagesView: View {
     
     @State private var languageRows: [[DeepLLanguage]] = []
     
-    @State private var text: Int = 0
+    @State private var scrollViewWidth: CGFloat = 0
     
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
-                Text("\(text)")
                 VStack(alignment: .leading, spacing: 10) {
                     ForEach(languageRows, id: \.self) { row in
                         HStack(spacing: 8) {
@@ -33,7 +32,8 @@ struct LanguagesView: View {
                     }
                 }
                 .onAppear {
-                    calculateRows(for: geometry.size.width)
+                    scrollViewWidth = geometry.size.width
+                    calculateRows(for: scrollViewWidth)
                 }
                 .task {
                     do {
@@ -42,6 +42,8 @@ struct LanguagesView: View {
                         languagesArray.forEach { lang in
                             languages.append(lang)
                         }
+                        
+                        calculateRows(for: scrollViewWidth)
                     } catch {
                         print(error.localizedDescription)
                     }
