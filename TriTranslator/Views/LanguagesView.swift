@@ -15,7 +15,7 @@ struct LanguagesView: View {
     var body: some View {
         VStack {
             Picker("languages", selection: $selectedLang) {
-                ForEach(languages, id: \.id) { language in
+                ForEach(languages) { language in
                     Text("\(language.name)").tag(language)
                 }
             }

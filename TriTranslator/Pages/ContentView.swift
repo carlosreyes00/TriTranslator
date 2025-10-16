@@ -13,16 +13,14 @@ struct ContentView: View {
     @State private var firestoreManager: FirestoreManager = .init()
     
     @State private var sourceText: String = ""
-    @State private var translatedText: String = ""
+    @State private var translatedText1: String = ""
+    @State private var translatedText2: String = ""
     
     @StateObject private var dLManager: DeepLManager = .init()
     
-    @State private var isLanguagesViewPresented: Bool = true
-    
-//    @State private var languages: [DeepLLanguage] = []
-    
-    @State private var selectedLanguage: DeepLLanguage = DeepLLanguage(language: "test language", name: "test name")
-//    @State private var selectedLanguage2: DeepLLanguage = DeepLLanguage(language: "", name: "")
+    // I set these vars to "nil" so I dont have to deal with unwrapping during development phase
+    @State private var selectedLanguage1: DeepLLanguage = DeepLLanguage(language: "nil", name: "nil")
+    @State private var selectedLanguage2: DeepLLanguage = DeepLLanguage(language: "nil", name: "nil")
     
     var body: some View {
         VStack {
@@ -33,12 +31,15 @@ struct ContentView: View {
                     Button("Translate") {
                         Task {
                             do {
-                                // create the Translation object (perform the actual translation)
-                                let translation = try await dLManager.translate(sourceText: sourceText, targetLang: selectedLanguage.language)!
+                                // create the Translation objects (perform the actual translations)
+                                async let translation1 = dLManager.translate(sourceText: sourceText, targetLang: selectedLanguage1.language)!
+                                async let translation2 = dLManager.translate(sourceText: sourceText, targetLang: selectedLanguage2.language)!
                                 // get the translation response and update the @State value (UI)
-                                translatedText = translation.responseTranslation!.translations[0].text
+                                translatedText1 = try await translation1.responseTranslation!.translations[0].text
+                                translatedText2 = try await translation2.responseTranslation!.translations[0].text
                                 // upload the Translation to Firestore
-                                firestoreManager.addTranslation(translation)
+//                                firestoreManager.addTranslation(translation1)
+//                                firestoreManager.addTranslation(translation2)
                             } catch {
                                 print(error.localizedDescription)
                             }
@@ -48,7 +49,8 @@ struct ContentView: View {
                 .padding()
                 
                 TextField("Texto para traducir", text: $sourceText)
-                TextField("Translated text", text: $translatedText)
+                TextField("Translated text to \(selectedLanguage1.name)", text: $translatedText1)
+                TextField("Translated text to \(selectedLanguage2.name)", text: $translatedText2)
                 
 //                ScrollView {
 //                    VStack {
@@ -71,6 +73,11 @@ struct ContentView: View {
                 }
             }
             .disabled(!authViewModel.isSignedIn)
+            
+            HStack {
+                LanguagesView(selectedLang: $selectedLanguage1)
+                LanguagesView(selectedLang: $selectedLanguage2)
+            }
         }
         .padding()
         .task {
@@ -88,9 +95,6 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showLoginPage) {
             LoginPage()
-        }
-        .sheet(isPresented: $isLanguagesViewPresented) {
-            LanguagesView(selectedLang: $selectedLanguage)
         }
     }
 }
