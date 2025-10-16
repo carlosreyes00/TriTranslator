@@ -61,8 +61,7 @@ class DeepLManager: ObservableObject {
         var languagesRequest = URLRequest(url: languagesUrl)
         languagesRequest.httpMethod = "GET"
         languagesRequest.allHTTPHeaderFields = [
-            "Authorization" : "DeepL-Auth-Key \(Secrets.deeplAPIKey)",
-            "Content-Type" : "application/json"
+            "Authorization" : "DeepL-Auth-Key \(Secrets.deeplAPIKey)"
         ]
                 
         let (data, response) = try await URLSession.shared.data(for: languagesRequest)

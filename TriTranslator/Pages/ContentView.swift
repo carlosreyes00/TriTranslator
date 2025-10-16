@@ -9,9 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
-    
     @State private var showLoginPage: Bool = false
-    
     @State private var firestoreManager: FirestoreManager = .init()
     
     @State private var sourceText: String = ""
@@ -19,9 +17,12 @@ struct ContentView: View {
     
     @StateObject private var dLManager: DeepLManager = .init()
     
+    @State private var isLanguagesViewPresented: Bool = true
+    
 //    @State private var languages: [DeepLLanguage] = []
     
-    @State private var selectedLanguage: DeepLLanguage = DeepLLanguage(language: "", name: "")
+    @State private var selectedLanguage: DeepLLanguage = DeepLLanguage(language: "test language", name: "test name")
+//    @State private var selectedLanguage2: DeepLLanguage = DeepLLanguage(language: "", name: "")
     
     var body: some View {
         VStack {
@@ -48,8 +49,6 @@ struct ContentView: View {
                 
                 TextField("Texto para traducir", text: $sourceText)
                 TextField("Translated text", text: $translatedText)
-                
-                LanguagesView(selectedLang: $selectedLanguage)
                 
 //                ScrollView {
 //                    VStack {
@@ -89,6 +88,9 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showLoginPage) {
             LoginPage()
+        }
+        .sheet(isPresented: $isLanguagesViewPresented) {
+            LanguagesView(selectedLang: $selectedLanguage)
         }
     }
 }
