@@ -9,60 +9,85 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
-    @State private var showLoginPage: Bool = false
+    @State private var showLoginPage = false
     @State private var firestoreManager: FirestoreManager = .init()
     
-    @State private var sourceText: String = ""
-    @State private var translatedText1: String = ""
-    @State private var translatedText2: String = ""
+    @State private var sourceText = ""
+    @State private var translatedText1 = ""
+    @State private var translatedText2 = ""
     
-    @StateObject private var dLManager: DeepLManager = .init()
+    private var dLManager: DeepLManager = .init()
     
-    // I set these vars to "nil" so I dont have to deal with unwrapping during development phase
-    @State private var selectedLanguage1: DeepLLanguage = DeepLLanguage(language: "nil", name: "nil")
-    @State private var selectedLanguage2: DeepLLanguage = DeepLLanguage(language: "nil", name: "nil")
+    @State private var selectedLanguage1 = DeepLLanguage(language: "EN-US", name: "English (American)")
+    @State private var selectedLanguage2 = DeepLLanguage(language: "FR", name: "French")
     
     var body: some View {
-        VStack {
-            Text("Signed In: \(authViewModel.isSignedIn ? "🟢" : "🔴")")
-            
-            if authViewModel.isSignedIn {
-                HStack {
-                    Button("Translate") {
-                        Task {
-                            do {
-                                // create the Translation objects (perform the actual translations)
-                                async let translation1 = dLManager.translate(sourceText: sourceText, targetLang: selectedLanguage1.language)!
-                                async let translation2 = dLManager.translate(sourceText: sourceText, targetLang: selectedLanguage2.language)!
-                                // get the translation response and update the @State value (UI)
-                                translatedText1 = try await translation1.responseTranslation!.translations[0].text
-                                translatedText2 = try await translation2.responseTranslation!.translations[0].text
-                                // upload the Translation to Firestore
-//                                firestoreManager.addTranslation(translation1)
-//                                firestoreManager.addTranslation(translation2)
-                            } catch {
-                                print(error.localizedDescription)
+        NavigationStack {
+            VStack {
+                if authViewModel.isSignedIn {
+                        VStack {
+                            HStack {
+                                CustomTextField(
+                                    text: $sourceText,
+                                    placeholder: "Text to translate"
+                                )
                             }
+                            HStack {
+                                CustomTextField(
+                                    text: $translatedText1,
+                                    placeholder: "Translated text to \(selectedLanguage1.name)"
+                                )
+                                LanguagesView(
+                                    selectedLang: $selectedLanguage1,
+                                    firstLanguage: "EN-US"
+                                )
+                                .frame(width: 70)
+                            }
+                            HStack {
+                                CustomTextField(
+                                    text: $translatedText2,
+                                    placeholder: "Translated text to \(selectedLanguage2.name)"
+                                )
+                                LanguagesView(
+                                    selectedLang: $selectedLanguage2,
+                                    firstLanguage: "FR"
+                                )
+                                .frame(width: 70)
+                            }
+                            Button("Translate") {
+                                Task {
+                                    do {
+                                        // create the Translation objects (perform the actual translations)
+                                        async let translation1 = dLManager.translate(
+                                            sourceText: sourceText,
+                                            targetLang: selectedLanguage1.language
+                                        )!
+                                        async let translation2 = dLManager.translate(
+                                            sourceText: sourceText,
+                                            targetLang: selectedLanguage2.language
+                                        )!
+                                        // get the translation response and update the @State value (UI)
+                                        translatedText1 = try await translation1.responseTranslation!
+                                            .translations[0].text
+                                        translatedText2 = try await translation2.responseTranslation!
+                                            .translations[0].text
+                                        // upload the Translation to Firestore
+                                        //                                firestoreManager.addTranslation(translation1)
+                                        //                                firestoreManager.addTranslation(translation2)
+                                    } catch {
+                                        print(error.localizedDescription)
+                                    }
+                                }
+                            }
+                            .buttonStyle(.glassProminent)
+                            .padding(.top)
                         }
-                    }
+                        .padding(.horizontal)
                 }
-                .padding()
-                
-                TextField("Texto para traducir", text: $sourceText)
-                TextField("Translated text to \(selectedLanguage1.name)", text: $translatedText1)
-                TextField("Translated text to \(selectedLanguage2.name)", text: $translatedText2)
-                
-//                ScrollView {
-//                    VStack {
-//                        ForEach(firestoreManager.translations) { translation in
-//                            TranslationCell(translation: translation)
-//                        }
-//                    }
-//                }
             }
-            
-            Button("Sign out") {
-                Task {
+            .navigationTitle("Tri-Translator")
+            .toolbar {
+                Button {
                     do {
                         print("signing out")
                         try authViewModel.signOut()
@@ -70,32 +95,26 @@ struct ContentView: View {
                     } catch {
                         print(error.localizedDescription)
                     }
+                } label: {
+                    Image(systemName: "rectangle.portrait.and.arrow.right")
+                        .foregroundStyle(.red)
                 }
+                .disabled(!authViewModel.isSignedIn)
             }
-            .disabled(!authViewModel.isSignedIn)
-            
-            HStack {
-                LanguagesView(selectedLang: $selectedLanguage1)
-                LanguagesView(selectedLang: $selectedLanguage2)
+            .onAppear {
+                showLoginPage = !authViewModel.isSignedIn
             }
-        }
-        .padding()
-        .task {
-            do {
-                try await firestoreManager.getTranslations()
-            } catch {
-                print(error.localizedDescription)
+            .onChange(of: authViewModel.isSignedIn) { _ , newValue in
+                showLoginPage = !newValue
             }
-        }
-        .onAppear {
-            showLoginPage = !authViewModel.isSignedIn
-        }
-        .onChange(of: authViewModel.isSignedIn) { _ , newValue in
-            showLoginPage = !newValue
-        }
-        .sheet(isPresented: $showLoginPage) {
-            LoginPage()
+            .sheet(isPresented: $showLoginPage) {
+                LoginPage()
+            }
         }
     }
 }
 
+#Preview {
+    ContentView()
+        .environmentObject(AuthViewModel())
+}
