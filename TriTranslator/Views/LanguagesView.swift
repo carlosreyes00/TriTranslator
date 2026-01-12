@@ -8,28 +8,42 @@
 import SwiftUI
 
 struct LanguagesView: View {
-    @Binding var selectedLang: DeepLLanguage
-    
     @State private var languages: [DeepLLanguage] = []
     
+    @Binding var selectedLang: DeepLLanguage
+    
+    let firstLanguage: String
+    
     var body: some View {
-        VStack {
-            Picker("languages", selection: $selectedLang) {
-                ForEach(languages) { language in
-                    Text("\(language.name)").tag(language)
+        HStack {
+            Menu {
+                ForEach(languages) { lang in
+                    Button {
+                        selectedLang = lang
+                    } label: {
+                        HStack {
+                            Text(lang.name)
+                            if lang == selectedLang {
+                                Spacer()
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
                 }
+            } label: {
+                Text(selectedLang.language)
             }
-            .pickerStyle(.wheel)
+            .menuOrder(.fixed)
         }
         .task {
             do {
                 let languagesArray = try await DeepLManager().getLanguages()
-                        
-                languagesArray.forEach { lang in
-                    languages.append(lang)
-                }
+                languages = languagesArray
+                selectedLang = languages.first(where: { deepllanguage in
+                    deepllanguage.language == firstLanguage
+                })!
             } catch {
-                print(error.localizedDescription)
+                print("Failed to load languages: \(error)")
             }
         }
     }
