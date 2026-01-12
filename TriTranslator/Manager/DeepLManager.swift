@@ -8,8 +8,26 @@
 import Foundation
 import SwiftUI
 
-@preconcurrency
-class DeepLManager: ObservableObject {
+class DeepLManager {
+    private enum Secrets {
+        static var deeplAPIKey: String {
+            guard let key = Bundle.main.object(forInfoDictionaryKey: "DEEPL_API_KEY") as? String else {
+                print("deepl api key not found in Secrets file")
+                return ""
+            }
+            
+            return key
+        }
+    }
+    
+    private func createURLwith(scheme: String, host: String, path: String) -> URL? {
+        var components = URLComponents()
+        components.scheme = scheme
+        components.host = host
+        components.path = path
+        
+        return components.url
+    }
     
     func translate(sourceText: String, sourceLang: String? = nil, targetLang: String) async throws -> Translation? {
         print("Starting translation")
@@ -35,8 +53,7 @@ class DeepLManager: ObservableObject {
         
         let deeplResponseObject = try JSONDecoder().decode(DeepLResponseTranslation.self, from: data)
         
-        print("Finishing translation")
-        print("\(deeplResponseObject)")
+        print("Finishing translation with success")
         
         return Translation(requestTranslation: deepLRequestObject, responseTranslation: deeplResponseObject, createdAt: Date.now)
     }
@@ -82,25 +99,5 @@ class DeepLManager: ObservableObject {
         }
         
         return []
-    }
-    
-    private func createURLwith(scheme: String, host: String, path: String) -> URL? {
-        var components = URLComponents()
-        components.scheme = scheme
-        components.host = host
-        components.path = path
-        
-        return components.url
-    }
-    
-    private enum Secrets {
-        static var deeplAPIKey: String {
-            guard let key = Bundle.main.object(forInfoDictionaryKey: "DEEPL_API_KEY") as? String else {
-                print("deepl api key not found in Secrets file")
-                return ""
-            }
-            
-            return key
-        }
     }
 }

@@ -14,7 +14,6 @@ class AuthViewModel: ObservableObject {
     @Published var isSignedIn: Bool = false
     
     init() {
-        print("initialazing AuthViewModel")
         self.user = Auth.auth().currentUser
         self.isSignedIn = user != nil
     }
