@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		126FDE082E2D4B0D0047766C /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 126FDE072E2D4B0D0047766C /* FirebaseFirestore */; };
-		126FDE142E2D919A0047766C /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 126FDE132E2D919A0047766C /* Secrets.xcconfig */; };
 		127AC7102E2C508B00B28F31 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 127AC70F2E2C508B00B28F31 /* FirebaseAnalytics */; };
 		127AC7122E2C508B00B28F31 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 127AC7112E2C508B00B28F31 /* FirebaseAuth */; };
 		127AC71B2E2C50AC00B28F31 /* TriTranslatorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127AC7182E2C50AC00B28F31 /* TriTranslatorApp.swift */; };
@@ -17,10 +16,10 @@
 		1288B9AC2E30262500B7133B /* LanguageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1288B9A72E30262500B7133B /* LanguageCell.swift */; };
 		1288B9AD2E30262500B7133B /* TranslationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1288B9A82E30262500B7133B /* TranslationCell.swift */; };
 		1288B9AE2E30262500B7133B /* LanguagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1288B9AA2E30262500B7133B /* LanguagesView.swift */; };
+		B34194522F1478E20047F360 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34194512F1478E20047F360 /* CustomTextField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		126FDE132E2D919A0047766C /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		127AC6FE2E2C4E3500B28F31 /* TriTranslator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TriTranslator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		127AC7152E2C50AC00B28F31 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		127AC7172E2C50AC00B28F31 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -29,6 +28,8 @@
 		1288B9A82E30262500B7133B /* TranslationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationCell.swift; sourceTree = "<group>"; };
 		1288B9AA2E30262500B7133B /* LanguagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguagesView.swift; sourceTree = "<group>"; };
 		129CFDA42E2DA15400B52781 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B34194512F1478E20047F360 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		B3AD5C892EADA39200469854 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -98,7 +99,7 @@
 				127AC7152E2C50AC00B28F31 /* Assets.xcassets */,
 				127AC7182E2C50AC00B28F31 /* TriTranslatorApp.swift */,
 				127AC7172E2C50AC00B28F31 /* GoogleService-Info.plist */,
-				126FDE132E2D919A0047766C /* Secrets.xcconfig */,
+				B3AD5C892EADA39200469854 /* Secrets.xcconfig */,
 			);
 			path = TriTranslator;
 			sourceTree = "<group>";
@@ -115,6 +116,7 @@
 		1288B9AB2E30262500B7133B /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B34194512F1478E20047F360 /* CustomTextField.swift */,
 				1288B9AA2E30262500B7133B /* LanguagesView.swift */,
 				1288B9A92E30262500B7133B /* Cells */,
 			);
@@ -159,7 +161,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1630;
-				LastUpgradeCheck = 1630;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					127AC6FD2E2C4E3500B28F31 = {
 						CreatedOnToolsVersion = 16.3;
@@ -195,7 +197,6 @@
 			files = (
 				127AC71C2E2C50AC00B28F31 /* Assets.xcassets in Resources */,
 				127AC71D2E2C50AC00B28F31 /* GoogleService-Info.plist in Resources */,
-				126FDE142E2D919A0047766C /* Secrets.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,6 +211,7 @@
 				1288B9AC2E30262500B7133B /* LanguageCell.swift in Sources */,
 				1288B9AD2E30262500B7133B /* TranslationCell.swift in Sources */,
 				1288B9AE2E30262500B7133B /* LanguagesView.swift in Sources */,
+				B34194522F1478E20047F360 /* CustomTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,7 +220,7 @@
 /* Begin XCBuildConfiguration section */
 		127AC7072E2C4E3600B28F31 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 126FDE132E2D919A0047766C /* Secrets.xcconfig */;
+			baseConfigurationReference = B3AD5C892EADA39200469854 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -270,12 +272,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -283,7 +286,7 @@
 		};
 		127AC7082E2C4E3600B28F31 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 126FDE132E2D919A0047766C /* Secrets.xcconfig */;
+			baseConfigurationReference = B3AD5C892EADA39200469854 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -329,11 +332,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -341,7 +345,7 @@
 		};
 		127AC70A2E2C4E3600B28F31 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 126FDE132E2D919A0047766C /* Secrets.xcconfig */;
+			baseConfigurationReference = B3AD5C892EADA39200469854 /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -371,7 +375,7 @@
 		};
 		127AC70B2E2C4E3600B28F31 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 126FDE132E2D919A0047766C /* Secrets.xcconfig */;
+			baseConfigurationReference = B3AD5C892EADA39200469854 /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
