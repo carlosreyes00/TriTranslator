@@ -30,8 +30,6 @@ class DeepLManager {
     }
     
     func translate(sourceText: String, sourceLang: String? = nil, targetLang: String) async throws -> Translation? {
-        print("Starting translation")
-        
         let translateURL = createURLwith(scheme: "https", host: "api-free.deepl.com", path: "/v2/translate")!
         
         var translateURLrequest = URLRequest(url: translateURL)
@@ -53,8 +51,6 @@ class DeepLManager {
         
         let deeplResponseObject = try JSONDecoder().decode(DeepLResponseTranslation.self, from: data)
         
-        print("Finishing translation with success")
-        
         return Translation(requestTranslation: deepLRequestObject, responseTranslation: deeplResponseObject, createdAt: Date.now)
     }
     
@@ -66,8 +62,6 @@ class DeepLManager {
         if languages.count > 0 {
             return languages
         }
-        
-        print("Started retrieving languages from DeepL API")
         
         // api-free.deepl.com/v2/languages?type=target
         guard let languagesUrl = createURLwith(scheme: "https", host: "api-free.deepl.com", path: "/v2/languages")?.appending(queryItems: [URLQueryItem(name: "type", value: "target")]) else {
