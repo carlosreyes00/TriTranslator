@@ -19,6 +19,7 @@ struct TriTranslatorApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(AuthViewModel())
+                .environmentObject(FirestoreManager())
         }
     }
 }

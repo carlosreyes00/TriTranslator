@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
-    @State private var firestoreManager: FirestoreManager = .init()
+    @EnvironmentObject private var firestoreManager: FirestoreManager
+    
     @State private var showLoginPage = false
     @State private var showHistoryView = false
     
@@ -73,8 +74,8 @@ struct ContentView: View {
                                     translatedText2 = try await translation2.responseTranslation!
                                         .translations[0].text
                                     // upload the Translation to Firestore
-                                    //                                firestoreManager.addTranslation(translation1)
-                                    //                                firestoreManager.addTranslation(translation2)
+                                    try await firestoreManager.addTranslation(translation1)
+                                    try await firestoreManager.addTranslation(translation2)
                                 } catch {
                                     print(error.localizedDescription)
                                 }
@@ -89,8 +90,11 @@ struct ContentView: View {
             .navigationTitle("Tri-Translator")
             .toolbar {
                 Menu("Options", systemImage: "ellipsis") {
-                    Button("History", systemImage: "list.bullet") {
-                        showHistoryView = true
+                    NavigationLink {
+                        TranslationsHistoryView()
+                            .environmentObject(firestoreManager)
+                    } label: {
+                        Label("History", systemImage: "list.bullet")
                     }
                     Button("Sign out", systemImage: "rectangle.portrait.and.arrow.right", role: .destructive) {
                         do {
@@ -121,4 +125,5 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .environmentObject(AuthViewModel())
+        .environmentObject(FirestoreManager())
 }

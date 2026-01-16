@@ -8,11 +8,25 @@
 import SwiftUI
 
 struct TranslationsHistoryView: View {
+    @EnvironmentObject private var firestoreManager: FirestoreManager
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView {
+            LazyVStack {
+                ForEach(firestoreManager.translations) { translation in
+                    TranslationCell(translation: translation)
+                        .padding(.vertical)
+                }
+            }
+        }
+        .navigationTitle("Translations")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
-#Preview {
-    TranslationsHistoryView()
-}
+//#Preview {
+//    NavigationStack {
+//        TranslationsHistoryView()
+//            .environmentObject(FirestoreManager())
+//    }
+//}
