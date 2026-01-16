@@ -9,8 +9,9 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var authViewModel: AuthViewModel
-    @State private var showLoginPage = false
     @State private var firestoreManager: FirestoreManager = .init()
+    @State private var showLoginPage = false
+    @State private var showHistoryView = false
     
     @State private var sourceText = ""
     @State private var translatedText1 = ""
@@ -25,79 +26,79 @@ struct ContentView: View {
         NavigationStack {
             VStack {
                 if authViewModel.isSignedIn {
-                        VStack {
-                            HStack {
-                                CustomTextField(
-                                    text: $sourceText,
-                                    placeholder: "Text to translate"
-                                )
-                            }
-                            HStack {
-                                CustomTextField(
-                                    text: $translatedText1,
-                                    placeholder: "Translated text to \(selectedLanguage1.name)"
-                                )
-                                LanguagesView(
-                                    selectedLang: $selectedLanguage1,
-                                    firstLanguage: "EN-US"
-                                )
-                                .frame(width: 70)
-                            }
-                            HStack {
-                                CustomTextField(
-                                    text: $translatedText2,
-                                    placeholder: "Translated text to \(selectedLanguage2.name)"
-                                )
-                                LanguagesView(
-                                    selectedLang: $selectedLanguage2,
-                                    firstLanguage: "FR"
-                                )
-                                .frame(width: 70)
-                            }
-                            Button("Translate") {
-                                Task {
-                                    do {
-                                        // create the Translation objects (perform the actual translations)
-                                        async let translation1 = dLManager.translate(
-                                            sourceText: sourceText,
-                                            targetLang: selectedLanguage1.language
-                                        )!
-                                        async let translation2 = dLManager.translate(
-                                            sourceText: sourceText,
-                                            targetLang: selectedLanguage2.language
-                                        )!
-                                        // get the translation response and update the @State value (UI)
-                                        translatedText1 = try await translation1.responseTranslation!
-                                            .translations[0].text
-                                        translatedText2 = try await translation2.responseTranslation!
-                                            .translations[0].text
-                                        // upload the Translation to Firestore
-                                        //                                firestoreManager.addTranslation(translation1)
-                                        //                                firestoreManager.addTranslation(translation2)
-                                    } catch {
-                                        print(error.localizedDescription)
-                                    }
+                    VStack {
+                        HStack {
+                            CustomTextField(
+                                text: $sourceText,
+                                placeholder: "Text to translate"
+                            )
+                        }
+                        HStack {
+                            CustomTextField(
+                                text: $translatedText1,
+                                placeholder: "Translated text to \(selectedLanguage1.name)"
+                            )
+                            LanguagesView(
+                                selectedLang: $selectedLanguage1,
+                                firstLanguage: "EN-US"
+                            )
+                            .frame(width: 70)
+                        }
+                        HStack {
+                            CustomTextField(
+                                text: $translatedText2,
+                                placeholder: "Translated text to \(selectedLanguage2.name)"
+                            )
+                            LanguagesView(
+                                selectedLang: $selectedLanguage2,
+                                firstLanguage: "FR"
+                            )
+                            .frame(width: 70)
+                        }
+                        Button("Translate") {
+                            Task {
+                                do {
+                                    // create the Translation objects (perform the actual translations)
+                                    async let translation1 = dLManager.translate(
+                                        sourceText: sourceText,
+                                        targetLang: selectedLanguage1.language
+                                    )!
+                                    async let translation2 = dLManager.translate(
+                                        sourceText: sourceText,
+                                        targetLang: selectedLanguage2.language
+                                    )!
+                                    // get the translation response and update the @State value (UI)
+                                    translatedText1 = try await translation1.responseTranslation!
+                                        .translations[0].text
+                                    translatedText2 = try await translation2.responseTranslation!
+                                        .translations[0].text
+                                    // upload the Translation to Firestore
+                                    //                                firestoreManager.addTranslation(translation1)
+                                    //                                firestoreManager.addTranslation(translation2)
+                                } catch {
+                                    print(error.localizedDescription)
                                 }
                             }
-                            .buttonStyle(.glassProminent)
-                            .padding(.top)
                         }
-                        .padding(.horizontal)
+                        .buttonStyle(.glassProminent)
+                        .padding(.top)
+                    }
+                    .padding(.horizontal)
                 }
             }
             .navigationTitle("Tri-Translator")
             .toolbar {
-                Button {
-                    do {
-                        print("signing out")
-                        try authViewModel.signOut()
-                        print("signed out")
-                    } catch {
-                        print(error.localizedDescription)
+                Menu("Options", systemImage: "ellipsis") {
+                    Button("History", systemImage: "list.bullet") {
+                        showHistoryView = true
                     }
-                } label: {
-                    Image(systemName: "rectangle.portrait.and.arrow.right")
-                        .foregroundStyle(.red)
+                    Button("Sign out", systemImage: "rectangle.portrait.and.arrow.right", role: .destructive) {
+                        do {
+                            try authViewModel.signOut()
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
                 }
                 .disabled(!authViewModel.isSignedIn)
             }
@@ -110,6 +111,9 @@ struct ContentView: View {
             .sheet(isPresented: $showLoginPage) {
                 LoginPage()
             }
+            .sheet(isPresented: $showHistoryView) {
+                TranslationsHistoryView()
+          }
         }
     }
 }
