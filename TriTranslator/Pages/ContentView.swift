@@ -12,7 +12,6 @@ struct ContentView: View {
     @EnvironmentObject private var firestoreManager: FirestoreManager
     
     @State private var showLoginPage = false
-    @State private var showHistoryView = false
     
     @State private var sourceText = ""
     @State private var translatedText1 = ""
@@ -115,9 +114,6 @@ struct ContentView: View {
             .sheet(isPresented: $showLoginPage) {
                 LoginPage()
             }
-            .sheet(isPresented: $showHistoryView) {
-                TranslationsHistoryView()
-          }
         }
     }
 }
