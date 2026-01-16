@@ -8,7 +8,7 @@
 import FirebaseFirestore
 
 @preconcurrency
-@Observable class FirestoreManager {
+class FirestoreManager: ObservableObject {
     private var db = Firestore.firestore()
     
     var translations = [Translation]()
@@ -28,7 +28,7 @@ import FirebaseFirestore
     }
     
     func getTranslations() async throws {
-        let querySnapshot = try await db.collection("translations").order(by: "createdAt").getDocuments()
+        let querySnapshot = try await db.collection("translations").order(by: "createdAt", descending: true).getDocuments()
         
         let translations = querySnapshot.documents.compactMap { document in
             try? document.data(as: Translation.self)
@@ -41,7 +41,7 @@ import FirebaseFirestore
     
     func startListening() {
         listener = db.collection("translations")
-            .order(by: "createdAt")
+            .order(by: "createdAt", descending: true)
             .addSnapshotListener { snapshot, error in
                 if let error = error {
                     print("Error listening to workouts: \(error.localizedDescription)")
