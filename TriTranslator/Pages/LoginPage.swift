@@ -21,7 +21,7 @@ struct LoginPage: View {
                 TextField("Email", text: $email)
                     .textContentType(.emailAddress)
                 VStack (alignment: .leading) {
-                    TextField("Password", text: $password)
+                    SecureField("Password", text: $password)
                         .textContentType(.password)
                         .onChange(of: password) { _, _ in
                             if password.count > 0 && password.count < 6 {
