@@ -32,6 +32,14 @@ struct ContentView: View {
                                 text: $sourceText,
                                 placeholder: "Text to translate"
                             )
+                            .toolbar {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    Spacer()
+                                    Button("Hide Keyboard", systemImage: "keyboard.chevron.compact.down") {
+                                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                                    }
+                                }
+                            }
                         }
                         HStack {
                             CustomTextField(
