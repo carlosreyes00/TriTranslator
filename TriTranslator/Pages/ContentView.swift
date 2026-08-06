@@ -75,14 +75,18 @@ struct ContentView: View {
                                         sourceText: sourceText,
                                         targetLang: selectedLanguage2.language
                                     )!
+                                    let (resolvedTranslation1, resolvedTranslation2) = try await (
+                                        translation1,
+                                        translation2
+                                    )
                                     // get the translation response and update the @State value (UI)
-                                    translatedText1 = try await translation1.responseTranslation!
+                                    translatedText1 = resolvedTranslation1.responseTranslation!
                                         .translations[0].text
-                                    translatedText2 = try await translation2.responseTranslation!
+                                    translatedText2 = resolvedTranslation2.responseTranslation!
                                         .translations[0].text
                                     // upload the Translation to Firestore
-                                    try await firestoreManager.addTranslation(translation1)
-                                    try await firestoreManager.addTranslation(translation2)
+                                    try firestoreManager.addTranslation(resolvedTranslation1)
+                                    try firestoreManager.addTranslation(resolvedTranslation2)
                                 } catch {
                                     print(error.localizedDescription)
                                 }
@@ -106,6 +110,7 @@ struct ContentView: View {
                     Button("Sign out", systemImage: "rectangle.portrait.and.arrow.right", role: .destructive) {
                         do {
                             try authViewModel.signOut()
+                            firestoreManager.clearTranslations()
                         } catch {
                             print(error.localizedDescription)
                         }

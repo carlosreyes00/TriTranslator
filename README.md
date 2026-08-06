@@ -34,11 +34,19 @@ DEEPL_API_KEY = your-deepl-api-key
 1. Create or select a project in the Firebase console.
 2. Add an iOS app with bundle identifier `com.carlosreyes.TriTranslator`.
 3. Enable Email/Password under Authentication > Sign-in method.
-4. Create a Cloud Firestore database and configure rules appropriate for authenticated users.
-5. Download `GoogleService-Info.plist`.
-6. Place it at `TriTranslator/GoogleService-Info.plist`.
+4. Create a Cloud Firestore database.
+5. Deploy the tracked rules to your Firebase project:
+
+   ```sh
+   npx --yes firebase-tools deploy --only firestore:rules --project YOUR_FIREBASE_PROJECT_ID
+   ```
+
+6. Download `GoogleService-Info.plist`.
+7. Place it at `TriTranslator/GoogleService-Info.plist`.
 
 The Xcode project already includes that path in the app's resources. The downloaded file is ignored by Git so clones and forks do not automatically connect to the original Firebase project.
+
+Translations are stored under `users/{firebaseUID}/translations`. The app retrieves that user's history when the History page opens; it does not keep a real-time Firestore listener active.
 
 ## Build and run
 
