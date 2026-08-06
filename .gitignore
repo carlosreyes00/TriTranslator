@@ -4,9 +4,9 @@
 
 .DS_Store
 
-GoogleService-Info.plist
-Secrets.xcconfig
-Info.plist
+# Local service configuration
+/TriTranslator/GoogleService-Info.plist
+/TriTranslator/Secrets.xcconfig
 
 ## User settings
 xcuserdata/

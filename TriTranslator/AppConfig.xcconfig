@@ -1,0 +1,4 @@
+// Shared build configuration. Local values belong in Secrets.xcconfig,
+// which is intentionally ignored by Git.
+DEEPL_API_KEY =
+#include? "Secrets.xcconfig"
