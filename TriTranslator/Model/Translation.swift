@@ -29,3 +29,25 @@ struct DeepLResponseTranslation: Codable {
     let translations: [TranslatedText]
 }
 
+struct TranslationDisplayContent: Equatable {
+    let sourceLanguage: String
+    let sourceText: String
+    let targetLanguage: String
+    let translatedText: String
+}
+
+extension Translation {
+    var displayContent: TranslationDisplayContent? {
+        guard let sourceText = requestTranslation.text.first,
+              let translatedText = responseTranslation?.translations.first else {
+            return nil
+        }
+
+        return TranslationDisplayContent(
+            sourceLanguage: translatedText.detected_source_language,
+            sourceText: sourceText,
+            targetLanguage: requestTranslation.target_lang,
+            translatedText: translatedText.text
+        )
+    }
+}

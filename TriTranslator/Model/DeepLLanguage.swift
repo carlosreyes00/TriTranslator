@@ -19,27 +19,47 @@ struct DeepLLanguage: Codable, Identifiable, Equatable, Hashable {
     }
 
     static func saveLanguagesToDisk(languages: [DeepLLanguage]) {
-        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("languages.json")
-        
-        do {
-            let data = try JSONEncoder().encode(languages)
-            try data.write(to: url, options: .atomic)
-        } catch {
-            print("Error saving local languages: \(error.localizedDescription)")
+        guard let url = languagesFileURL,
+              let data = try? JSONEncoder().encode(languages) else {
+            return
         }
+
+        try? data.write(to: url, options: .atomic)
     }
-    
+
     static func loadLanguagesFromDisk() -> [DeepLLanguage] {
-        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("languages.json")
-        do {
-            let data = try Data(contentsOf: url)
-            return try JSONDecoder().decode([DeepLLanguage].self, from: data)
-        } catch {
-            print("Error loading local languages: \(error.localizedDescription)")
+        guard let url = languagesFileURL,
+              let data = try? Data(contentsOf: url),
+              let languages = try? JSONDecoder().decode([DeepLLanguage].self, from: data) else {
             return []
         }
+
+        return languages
+    }
+
+    private static var languagesFileURL: URL? {
+        FileManager.default
+            .urls(for: .documentDirectory, in: .userDomainMask)
+            .first?
+            .appendingPathComponent("languages.json")
     }
 }
 
+struct DeepLLanguagePair: Equatable {
+    let first: DeepLLanguage
+    let second: DeepLLanguage
+
+    init(
+        languages: [DeepLLanguage],
+        firstCode: String,
+        secondCode: String
+    ) throws {
+        guard let first = languages.first(where: { $0.language == firstCode }),
+              let second = languages.first(where: { $0.language == secondCode }) else {
+            throw DeepLManagerError.missingRequiredLanguages
+        }
+
+        self.first = first
+        self.second = second
+    }
+}

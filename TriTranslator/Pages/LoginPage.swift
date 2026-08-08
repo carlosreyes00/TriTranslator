@@ -8,30 +8,57 @@
 import SwiftUI
 
 struct LoginPage: View {
+    private enum AuthenticationAction: Equatable {
+        case signIn
+        case signUp
+
+        var buttonTitle: String {
+            switch self {
+            case .signIn: "Sign In"
+            case .signUp: "Sign Up"
+            }
+        }
+    }
+
     @EnvironmentObject private var authViewModel: AuthViewModel
-    
-    @State private var email: String = ""
-    @State private var password: String = ""
-    
-    @State private var wrongPasswordFormat: Bool = false
-    
+
+    @State private var email = ""
+    @State private var password = ""
+    @State private var actionInProgress: AuthenticationAction?
+    @State private var authenticationErrorMessage: String?
+
+    private var hasInvalidPasswordLength: Bool {
+        !password.isEmpty && password.count < 6
+    }
+
+    private var canSubmit: Bool {
+        !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && password.count >= 6
+            && actionInProgress == nil
+    }
+
     var body: some View {
-        VStack {
+        VStack(spacing: 16) {
             Section {
                 TextField("Email", text: $email)
                     .textContentType(.emailAddress)
-                VStack (alignment: .leading) {
+                    .keyboardType(.emailAddress)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .disabled(actionInProgress != nil)
+                    .onChange(of: email) { _, _ in
+                        authenticationErrorMessage = nil
+                    }
+
+                VStack(alignment: .leading) {
                     SecureField("Password", text: $password)
                         .textContentType(.password)
+                        .disabled(actionInProgress != nil)
                         .onChange(of: password) { _, _ in
-                            if password.count > 0 && password.count < 6 {
-                                wrongPasswordFormat = true
-                            } else {
-                                wrongPasswordFormat = false
-                            }
+                            authenticationErrorMessage = nil
                         }
-                    
-                    if wrongPasswordFormat {
+
+                    if hasInvalidPasswordLength {
                         Text("Your password should be at least 6 characters long")
                             .foregroundStyle(.red)
                             .font(.footnote)
@@ -39,40 +66,84 @@ struct LoginPage: View {
                 }
             }
             .padding(.horizontal)
-            
+
             HStack {
-                Button("Sign In") {
-                    Task {
-                        do {
-                            print("signing in")
-                            try await authViewModel
-                                .signIn(email: email, password: password)
-                            print("signed in")
-                        } catch {
-                            print(error.localizedDescription)
-                        }
-                    }
-                }
-                
-                Button("Sign Up") {
-                    Task {
-                        do {
-                            print("signing up")
-                            try await authViewModel
-                                .signUp(email: email, password: password)
-                            print("signed up")
-                        } catch {
-                            print(error.localizedDescription)
-                        }
-                    }
-                }
+                authenticationButton(for: .signIn)
+                authenticationButton(for: .signUp)
             }
             .buttonStyle(.borderedProminent)
+
+            if let authenticationErrorMessage {
+                Label(authenticationErrorMessage, systemImage: "exclamationmark.triangle.fill")
+                    .font(.footnote)
+                    .foregroundStyle(.red)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+                    .accessibilityIdentifier("authenticationError")
+            }
         }
         .interactiveDismissDisabled()
+    }
+
+    private func authenticationButton(for action: AuthenticationAction) -> some View {
+        Button {
+            startAuthentication(using: action)
+        } label: {
+            HStack(spacing: 8) {
+                if actionInProgress == action {
+                    ProgressView()
+                }
+                Text(action.buttonTitle)
+            }
+        }
+        .disabled(!canSubmit)
+    }
+
+    @MainActor
+    private func startAuthentication(using action: AuthenticationAction) {
+        guard actionInProgress == nil else {
+            return
+        }
+
+        actionInProgress = action
+        authenticationErrorMessage = nil
+
+        let normalizedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
+        let submittedPassword = password
+
+        Task {
+            await authenticate(
+                using: action,
+                email: normalizedEmail,
+                password: submittedPassword
+            )
+        }
+    }
+
+    @MainActor
+    private func authenticate(
+        using action: AuthenticationAction,
+        email: String,
+        password: String
+    ) async {
+        defer { actionInProgress = nil }
+
+        do {
+            switch action {
+            case .signIn:
+                try await authViewModel.signIn(email: email, password: password)
+            case .signUp:
+                try await authViewModel.signUp(email: email, password: password)
+            }
+        } catch is CancellationError {
+            return
+        } catch {
+            authenticationErrorMessage = error.localizedDescription
+        }
     }
 }
 
 #Preview {
     LoginPage()
+        .environmentObject(AuthViewModel(previewIsSignedIn: false))
 }

@@ -8,43 +8,35 @@
 import SwiftUI
 
 struct LanguagesView: View {
-    @State private var languages: [DeepLLanguage] = []
-    
+    let languages: [DeepLLanguage]
     @Binding var selectedLang: DeepLLanguage
-    
-    let firstLanguage: String
-    
+    let isLoading: Bool
+    let isDisabled: Bool
+
     var body: some View {
-        HStack {
-            Menu {
-                ForEach(languages) { lang in
-                    Button {
-                        selectedLang = lang
-                    } label: {
-                        HStack {
-                            Text(lang.name)
-                            if lang == selectedLang {
-                                Spacer()
-                                Image(systemName: "checkmark")
-                            }
+        Menu {
+            ForEach(languages) { lang in
+                Button {
+                    selectedLang = lang
+                } label: {
+                    HStack {
+                        Text(lang.name)
+                        if lang == selectedLang {
+                            Spacer()
+                            Image(systemName: "checkmark")
                         }
                     }
                 }
-            } label: {
+            }
+        } label: {
+            if isLoading {
+                ProgressView()
+                    .controlSize(.small)
+            } else {
                 Text(selectedLang.language)
             }
-            .menuOrder(.fixed)
         }
-        .task {
-            do {
-                let languagesArray = try await DeepLManager().getLanguages()
-                languages = languagesArray
-                selectedLang = languages.first(where: { deepllanguage in
-                    deepllanguage.language == firstLanguage
-                })!
-            } catch {
-                print("Failed to load languages: \(error)")
-            }
-        }
+        .menuOrder(.fixed)
+        .disabled(isDisabled || isLoading || languages.isEmpty)
     }
 }

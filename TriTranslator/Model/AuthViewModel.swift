@@ -8,8 +8,8 @@
 import SwiftUI
 @preconcurrency import FirebaseAuth
 
-@preconcurrency
-class AuthViewModel: ObservableObject {
+@MainActor
+final class AuthViewModel: ObservableObject {
     @Published var user: User? = nil
     @Published var isSignedIn: Bool = false
     
@@ -17,23 +17,24 @@ class AuthViewModel: ObservableObject {
         self.user = Auth.auth().currentUser
         self.isSignedIn = user != nil
     }
+
+    init(previewIsSignedIn: Bool) {
+        self.user = nil
+        self.isSignedIn = previewIsSignedIn
+    }
     
     func signUp(email: String, password: String) async throws {
         let authDataResult = try await Auth.auth().createUser(withEmail: email, password: password)
-        
-        DispatchQueue.main.async { [self] in
-            user = authDataResult.user
-            isSignedIn = true
-        }
+
+        user = authDataResult.user
+        isSignedIn = true
     }
     
     func signIn(email: String, password: String) async throws {
         let authDataResult = try await Auth.auth().signIn(withEmail: email, password: password)
-        
-        DispatchQueue.main.async { [self] in
-            user = authDataResult.user
-            isSignedIn = true
-        }
+
+        user = authDataResult.user
+        isSignedIn = true
     }
     
     func signOut() throws {

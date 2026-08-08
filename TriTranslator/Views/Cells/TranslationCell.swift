@@ -8,28 +8,40 @@
 import SwiftUI
 
 struct TranslationCell: View {
-    
     var translation: Translation
-    
+
     var body: some View {
         VStack (alignment: .trailing) {
-            VStack (alignment: .leading) {
-                HStack {
-                    Text("\((translation.responseTranslation?.translations.first!.detected_source_language)!): ")
-                        .bold()
-                    Text(translation.requestTranslation.text.first!)
+            if let content = translation.displayContent {
+                VStack (alignment: .leading) {
+                    HStack {
+                        Text("\(content.sourceLanguage): ")
+                            .bold()
+                        Text(content.sourceText)
+                    }
+                    Divider()
+                    HStack {
+                        Text("\(content.targetLanguage): ")
+                            .bold()
+                        Text(content.translatedText)
+                    }
                 }
-                Divider()
-                HStack {
-                    Text("\(translation.requestTranslation.target_lang): ")
-                        .bold()
-                    Text((translation.responseTranslation?.translations.first!.text)!)
+                .padding()
+                .overlay {
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(.indigo, lineWidth: 1)
                 }
-            }
-            .padding()
-            .overlay {
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(.indigo, lineWidth: 1)
+            } else {
+                ContentUnavailableView(
+                    "Saved Translation Unavailable",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text("This history record is incomplete.")
+                )
+                .padding()
+                .overlay {
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(.orange, lineWidth: 1)
+                }
             }
             Text(translation.createdAt.formatted(date: .abbreviated, time: .shortened))
                 .font(.caption)
