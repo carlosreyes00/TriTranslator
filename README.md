@@ -76,3 +76,9 @@ Do not commit either of these local files:
 - `TriTranslator/GoogleService-Info.plist`
 
 Keeping the DeepL key out of Git prevents source-control exposure, but it does not make the key secret inside a distributed iOS app. The compiled app contains the value. Before production distribution, DeepL requests should move behind an authenticated backend that stores the credential server-side and applies rate limiting.
+
+## License
+
+Licensed under the [MIT License](LICENSE). Copyright (c) 2026 Carlos Reyes.
+
+Third-party dependencies remain subject to their own licenses.
