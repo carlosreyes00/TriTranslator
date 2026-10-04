@@ -11,21 +11,17 @@ struct TranslationCell: View {
     var translation: Translation
 
     var body: some View {
-        VStack (alignment: .trailing) {
-            if let content = translation.displayContent {
-                VStack (alignment: .leading) {
-                    HStack {
-                        Text("\(content.sourceLanguage): ")
-                            .bold()
-                        Text(content.sourceText)
-                    }
+        VStack(alignment: .trailing) {
+            if translation.hasDisplayContent {
+                VStack(alignment: .leading, spacing: 12) {
+                    textRow(language: translation.sourceLanguage, text: translation.sourceText)
                     Divider()
-                    HStack {
-                        Text("\(content.targetLanguage): ")
-                            .bold()
-                        Text(content.translatedText)
+                    ForEach(translation.translations.indices, id: \.self) { index in
+                        let result = translation.translations[index]
+                        textRow(language: result.targetLanguage, text: result.text)
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
                 .overlay {
                     RoundedRectangle(cornerRadius: 16)
@@ -48,47 +44,32 @@ struct TranslationCell: View {
         }
         .padding(.horizontal)
     }
+
+    private func textRow(language: String, text: String) -> some View {
+        HStack(alignment: .top) {
+            Text("\(language):")
+                .bold()
+                .fixedSize()
+            Text(text)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .accessibilityElement(children: .combine)
+    }
 }
 
 #Preview {
     ScrollView {
-        VStack {
-            TranslationCell(
-                translation:
-                        .init(
-                            requestTranslation:
-                                DeepLRequestTranslation(
-                                    text: ["Hola, mi nombre es iPhone"],
-                                    source_lang: nil,
-                                    target_lang: "EN"),
-                            responseTranslation: DeepLResponseTranslation(
-                                translations: [DeepLResponseTranslation.TranslatedText(
-                                    text: "Hi, my name is iPhone, Hi, my name is iPhone",
-                                    detected_source_language: "ES"
-                                )]
-                            ),
-                            createdAt: Date.now
-                        )
+        TranslationCell(
+            translation: .init(
+                sourceText: "Hola, mi nombre es iPhone",
+                sourceLanguage: "ES",
+                translations: [
+                    .init(targetLanguage: "EN-US", text: "Hi, my name is iPhone"),
+                    .init(targetLanguage: "FR", text: "Bonjour, je m’appelle iPhone")
+                ],
+                createdAt: .now
             )
-//            ForEach((1..<5)) { _ in
-//                TranslationCell(
-//                    translation:
-//                            .init(
-//                                requestTranslation:
-//                                    DeepLRequestTranslation(
-//                                        text: ["Hola, mi nombre es iPhone"],
-//                                        source_lang: nil,
-//                                        target_lang: "EN"),
-//                                responseTranslation: DeepLResponseTranslation(
-//                                    translations: [DeepLResponseTranslation.TranslatedText(
-//                                        text: "Hi, my name is iPhone, Hi, my name is iPhone",
-//                                        detected_source_language: "ES"
-//                                    )]
-//                                ),
-//                                createdAt: Date.now
-//                            )
-//                )
-//            }
-        }
+        )
     }
 }

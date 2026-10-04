@@ -42,9 +42,9 @@ final class DeepLManagerTests: XCTestCase {
         )
 
         XCTAssertEqual(translation.requestTranslation.text, ["Hello"])
-        XCTAssertEqual(translation.responseTranslation?.translations.first?.text, "Bonjour")
+        XCTAssertEqual(translation.responseTranslation.translations.first?.text, "Bonjour")
         XCTAssertEqual(
-            translation.responseTranslation?.translations.first?.detected_source_language,
+            translation.responseTranslation.translations.first?.detected_source_language,
             "EN"
         )
     }

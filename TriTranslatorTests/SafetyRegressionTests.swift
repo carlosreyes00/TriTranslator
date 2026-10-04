@@ -1,3 +1,4 @@
+import FirebaseFirestore
 import XCTest
 @testable import TriTranslator
 
@@ -33,53 +34,88 @@ final class SafetyRegressionTests: XCTestCase {
         }
     }
 
-    func testCompleteTranslationProvidesDisplayContent() {
-        let translation = makeTranslation(
-            requestText: ["Hola"],
-            response: DeepLResponseTranslation(
-                translations: [
-                    .init(text: "Hello", detected_source_language: "ES")
-                ]
-            )
+    func testHistoryEncodesBothResultsInOneDocument() throws {
+        let createdAt = Date(timeIntervalSince1970: 1_700_000_000)
+        let record = Translation(
+            sourceText: "Hola",
+            sourceLanguage: "ES",
+            translations: [
+                .init(targetLanguage: "EN-US", text: "Hello"),
+                .init(targetLanguage: "FR", text: "Bonjour")
+            ],
+            createdAt: createdAt
         )
 
-        XCTAssertEqual(
-            translation.displayContent,
-            TranslationDisplayContent(
-                sourceLanguage: "ES",
-                sourceText: "Hola",
-                targetLanguage: "EN-US",
-                translatedText: "Hello"
-            )
+        let document = try Firestore.Encoder().encode(record)
+
+        XCTAssertEqual(Set(document.keys), ["sourceText", "sourceLanguage", "translations", "createdAt"])
+        XCTAssertEqual(document["sourceText"] as? String, "Hola")
+        XCTAssertEqual(document["sourceLanguage"] as? String, "ES")
+        let results = try XCTUnwrap(document["translations"] as? [[String: String]])
+        XCTAssertEqual(results, [
+            ["targetLanguage": "EN-US", "text": "Hello"],
+            ["targetLanguage": "FR", "text": "Bonjour"]
+        ])
+
+        let decoded = try Firestore.Decoder().decode(
+            Translation.self,
+            from: document,
+            in: Firestore.firestore().document("users/test-user/translations/test-history")
         )
+        XCTAssertEqual(decoded.id, "test-history")
+        XCTAssertEqual(decoded.sourceText, record.sourceText)
+        XCTAssertEqual(decoded.sourceLanguage, record.sourceLanguage)
+        XCTAssertEqual(decoded.translations, record.translations)
+        XCTAssertEqual(decoded.createdAt, createdAt)
+        XCTAssertTrue(decoded.hasDisplayContent)
+    }
+
+    func testHistoryDecodesStoredResultsInOrderEvenWithSameTargetLanguage() throws {
+        let document: [String: Any] = [
+            "sourceText": "Hola",
+            "sourceLanguage": "ES",
+            "translations": [
+                ["targetLanguage": "EN-US", "text": "Hello"],
+                ["targetLanguage": "EN-US", "text": "Hi"]
+            ],
+            "createdAt": Timestamp(date: Date(timeIntervalSince1970: 1_700_000_000))
+        ]
+
+        let record = try Firestore.Decoder().decode(
+            Translation.self,
+            from: document,
+            in: Firestore.firestore().document("users/test-user/translations/test-history")
+        )
+
+        XCTAssertEqual(record.translations.map(\.text), ["Hello", "Hi"])
+        XCTAssertTrue(record.hasDisplayContent)
     }
 
     func testIncompleteHistoryRecordsHaveNoDisplayContent() {
+        let completeResults: [Translation.Result] = [
+            .init(targetLanguage: "EN-US", text: "Hello"),
+            .init(targetLanguage: "FR", text: "Bonjour")
+        ]
         let records = [
-            makeTranslation(requestText: [], response: nil),
-            makeTranslation(requestText: ["Hola"], response: nil),
-            makeTranslation(
-                requestText: ["Hola"],
-                response: DeepLResponseTranslation(translations: [])
-            )
+            makeTranslation(sourceText: "", results: completeResults),
+            makeTranslation(results: []),
+            makeTranslation(results: [completeResults[0]]),
+            makeTranslation(results: [completeResults[0], .init(targetLanguage: "FR", text: "")])
         ]
 
         for record in records {
-            XCTAssertNil(record.displayContent)
+            XCTAssertFalse(record.hasDisplayContent)
         }
     }
 
     private func makeTranslation(
-        requestText: [String],
-        response: DeepLResponseTranslation?
+        sourceText: String = "Hola",
+        results: [Translation.Result]
     ) -> Translation {
         Translation(
-            requestTranslation: DeepLRequestTranslation(
-                text: requestText,
-                source_lang: nil,
-                target_lang: "EN-US"
-            ),
-            responseTranslation: response,
+            sourceText: sourceText,
+            sourceLanguage: "ES",
+            translations: results,
             createdAt: .now
         )
     }

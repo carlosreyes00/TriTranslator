@@ -372,19 +372,26 @@ struct ContentView: View {
                 return
             }
 
-            guard let response1 = resolvedTranslation1.responseTranslation?.translations.first,
-                  let response2 = resolvedTranslation2.responseTranslation?.translations.first else {
+            guard let response1 = resolvedTranslation1.responseTranslation.translations.first,
+                  let response2 = resolvedTranslation2.responseTranslation.translations.first else {
                 throw DeepLManagerError.emptyTranslations
             }
 
             translatedText1 = response1.text
             translatedText2 = response2.text
 
+            let translation = Translation(
+                sourceText: sourceText,
+                sourceLanguage: response1.detected_source_language,
+                translations: [
+                    .init(targetLanguage: targetLanguage1, text: response1.text),
+                    .init(targetLanguage: targetLanguage2, text: response2.text)
+                ],
+                createdAt: .now
+            )
+
             do {
-                try await firestoreManager.addTranslations([
-                    resolvedTranslation1,
-                    resolvedTranslation2
-                ])
+                try await firestoreManager.addTranslation(translation)
             } catch is CancellationError {
                 return
             } catch {

@@ -46,7 +46,11 @@ DEEPL_API_KEY = your-deepl-api-key
 
 The Xcode project already includes that path in the app's resources. The downloaded file is ignored by Git so clones and forks do not automatically connect to the original Firebase project.
 
-Translations are stored under `users/{firebaseUID}/translations`. The app retrieves that user's history when the History page opens; it does not keep a real-time Firestore listener active.
+Translations are stored under `users/{firebaseUID}/translations`. Each successful request creates one document containing `sourceText`, `sourceLanguage` (detected by DeepL), `createdAt` (device time), and an ordered `translations` array of `{targetLanguage, text}` results. Both target translations must succeed before saving.
+
+History displays the original text once with both translations beneath it, newest requests first. The app retrieves that user's history when the History page opens; it does not keep a real-time Firestore listener active.
+
+This format replaces the previous individual-result records; existing records must be cleared or migrated before use.
 
 ## Build and run
 

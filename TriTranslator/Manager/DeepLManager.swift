@@ -104,7 +104,7 @@ final class DeepLManager {
         sourceText: String,
         sourceLang: String? = nil,
         targetLang: String
-    ) async throws -> Translation {
+    ) async throws -> DeepLTranslation {
         try Task.checkCancellation()
         try validateAPIKey()
 
@@ -142,10 +142,9 @@ final class DeepLManager {
             throw DeepLManagerError.emptyTranslations
         }
 
-        return Translation(
+        return DeepLTranslation(
             requestTranslation: requestTranslation,
-            responseTranslation: responseTranslation,
-            createdAt: .now
+            responseTranslation: responseTranslation
         )
     }
 

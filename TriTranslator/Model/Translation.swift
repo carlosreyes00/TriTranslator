@@ -8,10 +8,28 @@
 import FirebaseFirestore
 
 struct Translation: Identifiable, Codable {
+    struct Result: Codable, Equatable {
+        let targetLanguage: String
+        let text: String
+    }
+
     @DocumentID var id: String?
-    let requestTranslation: DeepLRequestTranslation
-    var responseTranslation: DeepLResponseTranslation?
+    let sourceText: String
+    let sourceLanguage: String
+    let translations: [Result]
     let createdAt: Date
+
+    var hasDisplayContent: Bool {
+        !sourceText.isEmpty
+            && !sourceLanguage.isEmpty
+            && translations.count >= 2
+            && translations.allSatisfy { !$0.targetLanguage.isEmpty && !$0.text.isEmpty }
+    }
+}
+
+struct DeepLTranslation {
+    let requestTranslation: DeepLRequestTranslation
+    let responseTranslation: DeepLResponseTranslation
 }
 
 struct DeepLRequestTranslation: Codable {
@@ -27,27 +45,4 @@ struct DeepLResponseTranslation: Codable {
     }
     
     let translations: [TranslatedText]
-}
-
-struct TranslationDisplayContent: Equatable {
-    let sourceLanguage: String
-    let sourceText: String
-    let targetLanguage: String
-    let translatedText: String
-}
-
-extension Translation {
-    var displayContent: TranslationDisplayContent? {
-        guard let sourceText = requestTranslation.text.first,
-              let translatedText = responseTranslation?.translations.first else {
-            return nil
-        }
-
-        return TranslationDisplayContent(
-            sourceLanguage: translatedText.detected_source_language,
-            sourceText: sourceText,
-            targetLanguage: requestTranslation.target_lang,
-            translatedText: translatedText.text
-        )
-    }
 }

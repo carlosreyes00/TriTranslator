@@ -27,20 +27,11 @@ final class FirestoreManager: ObservableObject {
     @Published private(set) var translations = [Translation]()
     @Published private(set) var skippedTranslationCount = 0
 
-    func addTranslations(_ translations: [Translation]) async throws {
-        guard !translations.isEmpty else {
-            return
-        }
-
+    func addTranslation(_ translation: Translation) async throws {
         let userID = try authenticatedUserID()
-        let collection = translationsCollection(for: userID)
-        let batch = db.batch()
-
-        for translation in translations {
-            try batch.setData(from: translation, forDocument: collection.document())
-        }
-
-        try await batch.commit()
+        let document = translationsCollection(for: userID).document()
+        let data = try Firestore.Encoder().encode(translation)
+        try await document.setData(data)
     }
 
     func getTranslations() async throws {
