@@ -5,6 +5,7 @@
 //  Created by Carlos Reyes on 7/20/25.
 //
 
+import CryptoKit
 import FirebaseFirestore
 
 struct Translation: Identifiable, Codable {
@@ -18,6 +19,26 @@ struct Translation: Identifiable, Codable {
     let sourceLanguage: String
     let translations: [Result]
     let createdAt: Date
+
+    /// Versioned identity for new history records. Display text and result order stay intact.
+    func historyDocumentID() throws -> String {
+        func normalized(_ text: String) -> String {
+            text.trimmingCharacters(in: .whitespacesAndNewlines)
+                .precomposedStringWithCanonicalMapping
+        }
+
+        let results = translations.map {
+            [normalized($0.targetLanguage), normalized($0.text)]
+        }.sorted { $0.lexicographicallyPrecedes($1) }
+        // Arrays preserve field boundaries and repeated target languages without relying
+        // on dictionary ordering or separators that could also occur in the text.
+        let fields = [[normalized(sourceLanguage), normalized(sourceText)]] + results
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.withoutEscapingSlashes]
+        let data = try encoder.encode(fields)
+        let digest = SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
+        return "v1_\(digest)"
+    }
 
     var hasDisplayContent: Bool {
         !sourceText.isEmpty

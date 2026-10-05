@@ -32,6 +32,7 @@ struct ContentView: View {
     @State private var isTranslating = false
     @State private var translationErrorMessage: String?
     @State private var persistenceErrorMessage: String?
+    @State private var isAlreadyInHistory = false
     @State private var translationTask: Task<Void, Never>?
     @State private var translationRequestID: UUID?
     @State private var accountAlert: AccountAlert?
@@ -149,6 +150,14 @@ struct ContentView: View {
                                 .accessibilityIdentifier("translationError")
                         }
 
+                        if isAlreadyInHistory {
+                            Label("Already in history", systemImage: "checkmark.circle")
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .accessibilityIdentifier("translationAlreadyInHistory")
+                        }
+
                         if let persistenceErrorMessage {
                             Label(persistenceErrorMessage, systemImage: "exclamationmark.icloud.fill")
                                 .font(.footnote)
@@ -172,6 +181,7 @@ struct ContentView: View {
                         translatedText2 = ""
                         translationErrorMessage = nil
                         persistenceErrorMessage = nil
+                        isAlreadyInHistory = false
                     }
                     .onChange(of: selectedLanguage1) { _, _ in
                         guard !isTranslating else {
@@ -181,6 +191,7 @@ struct ContentView: View {
                         translatedText1 = ""
                         translationErrorMessage = nil
                         persistenceErrorMessage = nil
+                        isAlreadyInHistory = false
                     }
                     .onChange(of: selectedLanguage2) { _, _ in
                         guard !isTranslating else {
@@ -190,6 +201,7 @@ struct ContentView: View {
                         translatedText2 = ""
                         translationErrorMessage = nil
                         persistenceErrorMessage = nil
+                        isAlreadyInHistory = false
                     }
                 }
             }
@@ -328,6 +340,7 @@ struct ContentView: View {
 
         translationErrorMessage = nil
         persistenceErrorMessage = nil
+        isAlreadyInHistory = false
         translatedText1 = ""
         translatedText2 = ""
         isTranslating = true
@@ -391,7 +404,11 @@ struct ContentView: View {
             )
 
             do {
-                try await firestoreManager.addTranslation(translation)
+                let saveResult = try await firestoreManager.addTranslation(translation)
+                guard translationRequestID == requestID else {
+                    return
+                }
+                isAlreadyInHistory = saveResult == .alreadyExists
             } catch is CancellationError {
                 return
             } catch {
@@ -443,6 +460,7 @@ struct ContentView: View {
             translatedText2 = ""
             translationErrorMessage = nil
             persistenceErrorMessage = nil
+            isAlreadyInHistory = false
         } catch {
             accountAlert = AccountAlert(
                 title: "Couldn’t Sign Out",

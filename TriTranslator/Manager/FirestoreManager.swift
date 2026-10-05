@@ -10,13 +10,21 @@ import FirebaseFirestore
 
 enum FirestoreManagerError: LocalizedError {
     case notAuthenticated
+    case invalidSaveResult
 
     var errorDescription: String? {
         switch self {
         case .notAuthenticated:
             return "You must be signed in to access translation history."
+        case .invalidSaveResult:
+            return "The translation save result could not be confirmed."
         }
     }
+}
+
+enum TranslationSaveResult: String {
+    case saved
+    case alreadyExists
 }
 
 @MainActor
@@ -27,11 +35,34 @@ final class FirestoreManager: ObservableObject {
     @Published private(set) var translations = [Translation]()
     @Published private(set) var skippedTranslationCount = 0
 
-    func addTranslation(_ translation: Translation) async throws {
+    func addTranslation(_ translation: Translation) async throws -> TranslationSaveResult {
+        try Task.checkCancellation()
         let userID = try authenticatedUserID()
-        let document = translationsCollection(for: userID).document()
+        let document = translationsCollection(for: userID)
+            .document(try translation.historyDocumentID())
         let data = try Firestore.Encoder().encode(translation)
-        try await document.setData(data)
+        let result = try await db.runTransaction { transaction, errorPointer in
+            do {
+                let snapshot = try transaction.getDocument(document)
+                if snapshot.exists {
+                    return TranslationSaveResult.alreadyExists.rawValue
+                }
+                transaction.setData(data, forDocument: document)
+                return TranslationSaveResult.saved.rawValue
+            } catch {
+                errorPointer?.pointee = error as NSError
+                return nil
+            }
+        }
+        try Task.checkCancellation()
+        guard Auth.auth().currentUser?.uid == userID else {
+            throw FirestoreManagerError.notAuthenticated
+        }
+        guard let rawValue = result as? String,
+              let saveResult = TranslationSaveResult(rawValue: rawValue) else {
+            throw FirestoreManagerError.invalidSaveResult
+        }
+        return saveResult
     }
 
     func getTranslations() async throws {

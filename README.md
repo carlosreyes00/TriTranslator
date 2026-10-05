@@ -46,7 +46,11 @@ DEEPL_API_KEY = your-deepl-api-key
 
 The Xcode project already includes that path in the app's resources. The downloaded file is ignored by Git so clones and forks do not automatically connect to the original Firebase project.
 
-Translations are stored under `users/{firebaseUID}/translations`. Each successful request creates one document containing `sourceText`, `sourceLanguage` (detected by DeepL), `createdAt` (device time), and an ordered `translations` array of `{targetLanguage, text}` results. Both target translations must succeed before saving.
+Translations are stored under `users/{firebaseUID}/translations`. Each new, distinct translation creates one document containing `sourceText`, `sourceLanguage` (detected by DeepL), `createdAt` (device time), and an ordered `translations` array of `{targetLanguage, text}` results. Both target translations must succeed before saving.
+
+New records use a versioned SHA-256 document ID derived from the source language/text and both target-language/text pairs. Duplicate detection ignores target order, surrounding whitespace, and equivalent Unicode encodings; it preserves case, accents, punctuation, numbers, internal whitespace, and changes to either translated result. A Firestore transaction creates the record only when that ID is absent. Repeated translations show “Already in history” and leave the existing record and timestamp unchanged. This check applies only to records saved with the new IDs; older records are not migrated or deduplicated. Near-duplicate similarity prompts are not implemented.
+
+Saving history requires connectivity because Firestore transactions do not run offline. If saving fails, the translated results remain visible with a history-save error. Duplicate detection happens after DeepL returns, so repeated requests still call DeepL.
 
 History displays the original text once with both translations beneath it, newest requests first. The app retrieves that user's history when the History page opens; it does not keep a real-time Firestore listener active.
 
