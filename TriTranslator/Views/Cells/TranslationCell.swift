@@ -13,7 +13,7 @@ struct TranslationCell: View {
     var body: some View {
         VStack(alignment: .trailing) {
             if translation.hasDisplayContent {
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 5) {
                     textRow(language: translation.sourceLanguage, text: translation.sourceText)
                     Divider()
                     ForEach(translation.translations.indices, id: \.self) { index in
@@ -22,10 +22,11 @@ struct TranslationCell: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
+                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
                 .overlay {
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(.indigo, lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Gradient(colors: [.blue, .indigo]), lineWidth: 2)
                 }
             } else {
                 ContentUnavailableView(
@@ -69,6 +70,30 @@ struct TranslationCell: View {
                     .init(targetLanguage: "FR", text: "Bonjour, je m’appelle iPhone")
                 ],
                 createdAt: .now
+            )
+        )
+        
+        TranslationCell(
+            translation: .init(
+                sourceText: "Hola, mi nombre es iPhone, cuál es tu nombre?, Hola, mi nombre es iPhone, cuál es tu nombre?, Hola, mi nombre es iPhone, cuál es tu nombre?",
+                sourceLanguage: "ES",
+                translations: [
+                    .init(targetLanguage: "EN-US", text: "Hi, my name is iPhone, what's your name?,Hi, my name is iPhone, what's your name?,Hi, my name is iPhone, what's your name?"),
+                    .init(targetLanguage: "FR", text: "Bonjour, je m’appelle iPhone")
+                ],
+                createdAt: .now.addingTimeInterval(-300)
+            )
+        )
+        
+        TranslationCell(
+            translation: .init(
+                sourceText: "Hola, mi nombre es iPhone",
+                sourceLanguage: "ES",
+                translations: [
+                    .init(targetLanguage: "EN-US", text: "Hi, my name is iPhone"),
+                    .init(targetLanguage: "FR", text: "Bonjour, je m’appelle iPhone")
+                ],
+                createdAt: .now.addingTimeInterval(-720)
             )
         )
     }
